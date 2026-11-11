@@ -62,8 +62,7 @@ Provide three CSV files (see [`data/README.md`](data/README.md) for details):
 | `macro.csv` | `date`, one column per macroeconomic variable |
 
 Characteristics and macro variables dated month *t* are paired with the return
-of month *t+1*. Characteristics are rank-normalised within each month and
-missing entries are masked.
+of month *t+1*. Characteristics are rank-normalised within each month.
 
 ## Quick start (no WRDS access needed)
 
@@ -119,7 +118,6 @@ confused: the pooled out-of-sample R^2 against a zero forecast,
 4. **Roll.** Move the window forward one month, warm-start from the previous
    parameters, fine-tune on the joint objective, forecast again.
 
-Pseudocode is in [`docs/algorithm.tex`](docs/algorithm.tex) and summarised below.
 
 ```
 for each test month tau:
