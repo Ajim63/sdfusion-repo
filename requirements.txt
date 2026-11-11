@@ -1,0 +1,6 @@
+torch>=2.1
+numpy>=1.24
+pandas>=2.0
+pyyaml>=6.0
+# Optional, recommended for full-size runs (requires a CUDA GPU):
+# mamba-ssm>=2.2

@@ -1,0 +1,67 @@
+# Tiny configuration for a quick end-to-end check on the synthetic data
+# (python scripts/make_synthetic_data.py --out data/synthetic). Runs on CPU.
+
+data:
+  characteristics_csv: data/synthetic/characteristics.csv
+  returns_csv: data/synthetic/returns.csv
+  macro_csv: data/synthetic/macro.csv
+  id_col: permno
+  date_col: date
+  return_col: ret
+  returns_are_forward: false
+  industry_col: industry
+  size_col: mktcap
+  exclude_cols: [mktcap]
+  characteristic_cols: null
+  macro_cols: null
+  normalize: rank
+  min_firms_per_month: 30
+
+window:
+  train_months: 24
+  val_months: 6
+  step_months: 1
+  max_windows: 3
+
+model:
+  K: 3
+  d_model: 16
+  d_state: 8
+  temporal_layers: 2
+  cross_layers: 1
+  backend: torch
+  diffusion:
+    hidden: 16
+    history: 6
+    train_steps: 200
+    sample_steps: 10
+    n_samples: 20
+    guidance: 1.0
+    p_drop: 0.1
+    eta: 1.0
+
+loss:
+  lambda_orth: 0.1
+  lambda_inst: 0.01
+  lambda_diff: 1.0
+  lambda_cvar: 0.1
+  cvar_alpha: 0.05
+
+train:
+  t_chunk: 12
+  n_sub: 64
+  eval_n_sub: 128
+  epochs_stage1: 4
+  epochs_stage2: 10
+  epochs_stage3: 2
+  finetune_epochs: 1
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+  warmup_frac: 0.1
+  grad_clip: 1.0
+  patience: 10
+  val_every: 2
+  perm_prob: 0.3
+  seed: 0
+
+output_dir: outputs/smoke

@@ -1,0 +1,67 @@
+# SDFusion - default configuration (settings of Section IV-B of the paper).
+
+data:
+  characteristics_csv: data/characteristics.csv
+  returns_csv: data/returns.csv
+  macro_csv: data/macro.csv
+  id_col: permno
+  date_col: date
+  return_col: ret              # monthly excess return
+  returns_are_forward: false   # true if the row dated t already holds the return of t+1
+  industry_col: null           # optional column in the characteristics file (ordering only)
+  size_col: null               # optional column used to order firms within industry
+  exclude_cols: []             # columns of the characteristics file that are not features
+  characteristic_cols: null    # null = every remaining column
+  macro_cols: null             # null = every column except the date
+  normalize: rank              # rank | zscore | none  (cross-sectional, per month)
+  min_firms_per_month: 50
+
+window:
+  train_months: 216            # 240-month estimation window = 216 train + 24 validation
+  val_months: 24
+  step_months: 1               # roll forward one month at a time
+  max_windows: null            # null = run to the end of the sample
+
+model:
+  K: 10                        # number of latent factors
+  d_model: 64
+  d_state: 16
+  temporal_layers: 5
+  cross_layers: 5
+  backend: auto                # auto | mamba_ssm | torch
+  diffusion:
+    hidden: 64
+    history: 12                # H: months of factor history summarised by the GRU
+    train_steps: 1000          # length of the forward noising chain
+    sample_steps: 10           # denoising steps at inference
+    n_samples: 100             # J: Monte Carlo factor draws per forecast
+    guidance: 1.0              # w: classifier-free guidance scale
+    p_drop: 0.1
+    eta: 1.0                   # 1 = ancestral sampling, 0 = deterministic
+
+# The loss weights below are placeholders: set them to the values used in your runs.
+loss:
+  lambda_orth: 0.1
+  lambda_inst: 0.01
+  lambda_diff: 1.0
+  lambda_cvar: 0.1
+  cvar_alpha: 0.05
+
+train:
+  t_chunk: 36                  # months per optimisation step
+  n_sub: 5000                  # firms sampled per month per step
+  eval_n_sub: null             # null = full cross-section at validation and test
+  epochs_stage1: 500
+  epochs_stage2: 300
+  epochs_stage3: 300
+  finetune_epochs: 30          # joint fine-tuning epochs after each roll (warm start)
+  lr: 3.0e-4
+  weight_decay: 1.0e-4
+  warmup_frac: 0.05
+  grad_clip: 1.0
+  patience: 10                 # early stopping, counted in validation checks
+  val_every: 5                 # epochs between validation checks in stages 1 and 3
+  perm_prob: 0.3               # firm-order permutation probability, annealed to 0 in stage 1
+  seed: 0
+
+output_dir: outputs/run1

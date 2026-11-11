@@ -1,0 +1,25 @@
+# Licensed data must never be committed.
+data/*
+!data/README.md
+*.csv
+*.parquet
+*.sas7bdat
+*.dta
+
+# Run outputs and checkpoints
+outputs/
+*.pt
+*.ckpt
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
